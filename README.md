@@ -6,7 +6,7 @@
 ```js
 Weather in London,uk
 {
-    coord: { lon: -0.1257, lat: 51.5085 },
+  coord: { lon: -0.1257, lat: 51.5085 },
   weather: [
       {
           id: 803,
