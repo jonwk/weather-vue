@@ -9,7 +9,7 @@ Weather in London,uk
   coord: { lon: -0.1257, lat: 51.5085 },
   weather: [
       {
-          id: 803,
+      id: 803,
       main: 'Clouds',
       description: 'broken clouds',
       icon: '04n'
@@ -17,7 +17,7 @@ Weather in London,uk
   ],
   base: 'stations',
   main: {
-      temp: 287.68,
+    temp: 287.68,
     feels_like: 287.56,
     temp_min: 286.64,
     temp_max: 288.59,
@@ -29,7 +29,7 @@ Weather in London,uk
   clouds: { all: 75 },
   dt: 1665949971,
   sys: {
-      type: 2,
+    type: 2,
     id: 2075535,
     country: 'GB',
     sunrise: 1665901540,
