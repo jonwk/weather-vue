@@ -14,8 +14,9 @@ TODO:
     - Air Pollution - PM2_5 forecast for the next 5 days
         - advise the user to wear a mask if PM2_5 > 10
     - One Innovative Feature 
-
  -->
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,13 +36,37 @@ TODO:
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" class="p-8">
         <h1 class="text-4xl font-semibold">Weather App</h1>
         <br />
         <p>Please enter the town you are seeking the forecast of:</p>
-        <input v-model="town" placeholder="Town Name" />
-        <button v-on:click="getWeatherForTown"
-            class="h-10 px-6 font-semibold rounded-full bg-violet-600 text-white">Show me the weather!</button>
+        <div class="flex items-center">
+            <div class="relative w-full">
+                <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 " fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <input v-model="town" type="text" v-model="town"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 "
+                    placeholder="Enter a town name..." required />
+            </div>
+            <button v-on:click="getWeatherForTown"
+                class="inline-flex items-center py-2.5 px-3 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <svg aria-hidden="true" class="mr-2 -ml-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>Search
+            </button>
+        </div>
+
+
+        <!-- <button v-on:click="getWeatherForTown"
+            class="h-10 px-6 font-semibold rounded-full bg-violet-600 text-white">Show me the weather!</button> -->
         <span v-if="isError">
             <br />
             <br />
@@ -51,62 +76,62 @@ TODO:
         <!-- Rain Packing Tips -->
         <div v-if="!isError && isRain != null">
             <p>
-                <b>Rain:</b>
-                <span v-if="isRain">There is rain forecast during these dates. You should pack an umberella.</span>
-                <span v-if="!isRain">There is no rain forecast during these dates. No need to pack an umberella!.</span>
+            <h2 class="text-lg font-semibold">☔ Rain:</h2>
+            <span v-if="isRain">There is rain forecast during these dates. You should pack an umberella.</span>
+            <span v-if="!isRain">There is no rain forecast during these dates. No need to pack an umberella!.</span>
             </p>
         </div>
 
         <!-- Weather Sentiment Packing Tips -->
         <div v-if="!isError && temperatureSummary != null">
             <p>
-                <b>Packing:</b>
-                <span v-if="temperatureSummary.sentiment == 'hot'">Temperature range is >20°C. You should pack light
-                    clothes
-                    as to keep cool.</span>
-                <span v-if="temperatureSummary.sentiment == 'warm'">Temperature range is between
-                    {{temperatureSummary.max}}°C and {{temperatureSummary.min}}°C. You should pack both light clothes
-                    with
-                    some extra layers for when it gets colder.</span>
-                <span v-if="temperatureSummary.sentiment == 'cold'">Temperature range is between
-                    {{temperatureSummary.max}}°C and {{temperatureSummary.min}}°C. You should pack warm clothes with
-                    plenty
-                    of insulation to keep warm.</span>
+            <h2 class="text-lg font-semibold">👔 Packing:</h2>
+            <span v-if="temperatureSummary.sentiment == 'hot'">Temperature range is >20°C. You should pack light
+                clothes
+                as to keep cool.</span>
+            <span v-if="temperatureSummary.sentiment == 'warm'">Temperature range is between
+                {{temperatureSummary.max}}°C and {{temperatureSummary.min}}°C. You should pack both light clothes
+                with
+                some extra layers for when it gets colder.</span>
+            <span v-if="temperatureSummary.sentiment == 'cold'">Temperature range is between
+                {{temperatureSummary.max}}°C and {{temperatureSummary.min}}°C. You should pack warm clothes with
+                plenty
+                of insulation to keep warm.</span>
             </p>
         </div>
 
         <!-- Mask Advise -->
         <div v-if="!isError && maskAdvised != null">
             <p>
-                <b>Mask Advise:</b>
-                <span v-if="maskAdvised">High Air Pollution Expected (PM2_5 > 10). You should wear a Mask
-                    outside.</span>
-                <span v-if="!maskAdvised">There is not much air pollution these dates. No need to wear a mask!.</span>
+            <h2 class="text-lg font-semibold">😷 Mask Advise: </h2>
+            <span v-if="maskAdvised">High Air Pollution Expected (PM2_5 > 10). You should wear a Mask
+                outside.</span>
+            <span v-if="!maskAdvised">There is not much air pollution these dates. No need to wear a mask!.</span>
             </p>
         </div>
 
-        <table v-if="forecastJson">
-            <thead>
+        <table v-if="forecastJson" class="w-full text-sm text-left text-gray-500 ">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-5">
                 <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Avg Temperature (°C)</th>
-                    <th scope="col">Avg Wind Speed (m/s)</th>
-                    <th scope="col">Avg PM2_5</th>
-                    <th scope="col">Rainfall Level (mm)</th>
-                    <th scope="col">Min Temperature (°C)</th>
-                    <th scope="col">Max Temperature (°C)</th>
+                    <th scope="col" class="border border-slate-300">Date</th>
+                    <th scope="col" class="border border-slate-300">Avg Temperature (°C)</th>
+                    <th scope="col" class="border border-slate-300">Highest (°C)</th>
+                    <th scope="col" class="border border-slate-300">Lowest (°C)</th>
+                    <th scope="col" class="border border-slate-300">Avg Wind Speed (m/s)</th>
+                    <th scope="col" class="border border-slate-300">Avg PM2_5</th>
+                    <th scope="col" class="border border-slate-300">Rainfall Level (mm)</th>
                 </tr>
             </thead>
             <tbody>
                 <template v-for="(dateEntry, date) in forecastJson">
                     <tr>
-                        <th scope="row">{{ date }}</th>
-                        <td>{{ dateEntry.averageTemp }}</td>
-                        <td>{{ dateEntry.averageWind }}</td>
-                        <td>{{ dateEntry.averagePM2_5 }}</td>
-                        <td>{{ dateEntry.rainfallLevels }}</td>
-                        <td>{{ dateEntry.temperatureRange.min }}</td>
-                        <td>{{ dateEntry.temperatureRange.max }}</td>
+                        <td scope="row" class="border">{{ date }}</td>
+                        <td class="border">{{ dateEntry.averageTemp }}</td>
+                        <td class="border">{{ dateEntry.temperatureRange.min }}</td>
+                        <td class="border">{{ dateEntry.temperatureRange.max }}</td>
+                        <td class="border">{{ dateEntry.averageWind }}</td>
+                        <td class="border">{{ dateEntry.averagePM2_5 }}</td>
+                        <td class="border">{{ dateEntry.rainfallLevels }}</td>
                     </tr>
                 </template>
             </tbody>
@@ -135,10 +160,6 @@ TODO:
             }
         },
         methods: {
-            increment() {
-                // update component state
-                this.count++
-            },
             getWeatherForTown() {
                 console.log(`Getting weather for town ${this.town}...`);
 
