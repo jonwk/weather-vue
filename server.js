@@ -2,18 +2,20 @@
 require("dotenv").config()
 
 const axios = require('axios')
-// const cors = require('cors');
+const cors = require('cors');
 const express = require('express');
 const { get } = require("http");
 const path = require('path');
 
 const app = express();
+app.use(cors());
 const port = 3000
 const base_url = `https://api.openweathermap.org/data/2.5`
 const API_key = process.env.API_key
 
-const average = arr => arr.reduce((p, c) => p + c, 0) / arr.length;
-const sum = arr => arr.reduce((p, c) => p + c, 0);
+const average = arr => (arr.reduce((p, c) => p + c, 0) / arr.length).toFixed(2);
+// const average = arr => (arr.reduce((p, c) => p + c, 0) / arr.length);
+const sum = arr => (arr.reduce((p, c) => p + c, 0)).toFixed(2);
 const kelvin_to_celsius = k => (k < 0) ? '0K' : Math.round((k - 273.12) * 100) / 100;
 const min_max = (arr) => {
     const min = kelvin_to_celsius(Math.min(...arr));
@@ -136,6 +138,57 @@ function getForecast(req, res) {
             }
 
         }
+    ).then(() => {
+        axios.get(`${base_url}/air_pollution/forecast?lat=${lati}&lon=${longi}&APPID=${API_key}`).then((response1) => {
+            const airPollutionData = response1.data.list;
+            for (airPollutionEntry of airPollutionData) {
+                let date = new Date(airPollutionEntry.dt * 1000);
+                date.setHours(0, 0, 0, 0);
+                date = date.toLocaleDateString();
+
+                // First check if there is a date entry for the given date, if not create one
+                if (!airPollutionSummary[date]) {
+                    airPollutionSummary[date] = {
+                        pm2_5: []
+                    }
+                }
+                // Extract temperature and wind speed data
+                airPollutionSummary[date].pm2_5.push(airPollutionEntry.components.pm2_5);
+                // console.log(`${date} - PM2_5 - ${airPollutionEntry.components.pm2_5}`)
+            }
+
+            // When finished extracting data, calculate averages
+            for (dateEntry in forecastSummary) {
+                forecastSummary[dateEntry].averageTemp = kelvin_to_celsius(average(forecastSummary[dateEntry].temperatures));
+                forecastSummary[dateEntry].averageWind = average(forecastSummary[dateEntry].windSpeeds);
+                forecastSummary[dateEntry].rainfallLevels = sum(forecastSummary[dateEntry].rainfallLevels);
+                forecastSummary[dateEntry].temperatureRange = min_max(forecastSummary[dateEntry].temperatures);
+                forecastSummary[dateEntry].averagePM2_5 = average(airPollutionSummary[dateEntry].pm2_5);
+            }
+
+            // Get overall temperature sentiment
+            temperatureSummary = getTemperaturesSummary(forecastSummary);
+            maskAdvised = getMaskAdvise(forecastSummary);
+
+
+
+            res.json({
+                forecastSummary: forecastSummary,
+                isRain: isRain,
+                temperatureSummary: temperatureSummary,
+                maskAdvised: maskAdvised
+            })
+
+
+        }).catch((error) => {
+            console.error(error);
+            res.status(400);
+            res.json({
+                error: "Bad Request!"
+            });
+        })
+    }
+
     ).catch((error) => {
         console.error(error);
         res.status(400);
@@ -144,54 +197,7 @@ function getForecast(req, res) {
         });
     })
 
-    axios.get(`${base_url}/air_pollution/forecast?lat=${lati}&lon=${longi}&APPID=${API_key}`).then((response1) => {
-        const airPollutionData = response1.data.list;
-        for (airPollutionEntry of airPollutionData) {
-            let date = new Date(airPollutionEntry.dt * 1000);
-            date.setHours(0, 0, 0, 0);
-            date = date.toLocaleDateString();
 
-            // First check if there is a date entry for the given date, if not create one
-            if (!airPollutionSummary[date]) {
-                airPollutionSummary[date] = {
-                    pm2_5: []
-                }
-            }
-            // Extract temperature and wind speed data
-            airPollutionSummary[date].pm2_5.push(airPollutionEntry.components.pm2_5);
-            // console.log(`${date} - PM2_5 - ${airPollutionEntry.components.pm2_5}`)
-        }
-
-        // When finished extracting data, calculate averages
-        for (dateEntry in forecastSummary) {
-            forecastSummary[dateEntry].averageTemp = kelvin_to_celsius(average(forecastSummary[dateEntry].temperatures));
-            forecastSummary[dateEntry].averageWind = average(forecastSummary[dateEntry].windSpeeds);
-            forecastSummary[dateEntry].rainfallLevels = sum(forecastSummary[dateEntry].rainfallLevels);
-            forecastSummary[dateEntry].temperatureRange = min_max(forecastSummary[dateEntry].temperatures);
-            forecastSummary[dateEntry].averagePM2_5 = average(airPollutionSummary[dateEntry].pm2_5);
-        }
-
-        // Get overall temperature sentiment
-        temperatureSummary = getTemperaturesSummary(forecastSummary);
-        maskAdvised = getMaskAdvise(forecastSummary);
-
-
-
-        res.json({
-            forecastSummary: forecastSummary,
-            isRain: isRain,
-            temperatureSummary: temperatureSummary,
-            maskAdvised: maskAdvised
-        })
-
-
-    }).catch((error) => {
-        console.error(error);
-        res.status(400);
-        res.json({
-            error: "Bad Request!"
-        });
-    })
 
 
 
