@@ -72,7 +72,7 @@ function getTemperatureAnalysis(forecastData) {
 
 function getForecast(req, res) {
     var town = req.params.town;
-    console.log(`Generating weather forecast for town ${town}...`);
+    console.log(`Requesting weather forecast for ${town}...`);
 
     var forecastData = {};
     var doesRain = false;

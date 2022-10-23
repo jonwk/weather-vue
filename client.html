@@ -157,7 +157,7 @@ TODO:
         },
         methods: {
             getWeatherForecast() {
-                console.log(`Requesting weather forecast for town ${this.town}...`);
+                console.log(`Requesting weather forecast for ${this.town}...`);
 
                 fetch(`http://localhost:3000/weather/${this.town}`)
                     .then((response) => {
