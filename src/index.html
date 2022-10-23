@@ -18,6 +18,7 @@ TODO:
     - One Innovative Feature 
 
  -->
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -40,11 +41,24 @@ TODO:
         <button @click="increment" class="h-10 px-6 font-semibold rounded-full bg-violet-600 text-white">
             Count is: {{ count }}
         </button>
+        <!-- <MyComponent /> -->
     </div>
 </body>
 
+<script>
+
+</script>
+
 <script type="module">
     import { createApp } from 'vue'
+
+    // import MyComponent from './components/MyComponent.vue'
+    // export default {
+    //     components: {
+    //         MyComponent
+    //     }
+    // }
+    console.log("hello")
 
     createApp({
         data() {
@@ -61,5 +75,6 @@ TODO:
         }
     }).mount('#app')
 </script>
+
 
 </html>
