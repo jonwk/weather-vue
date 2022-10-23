@@ -75,6 +75,16 @@ TODO:
             </p>
         </div>
 
+        <!-- Mask Advise -->
+        <div v-if="!isError && maskAdvised != null">
+            <p>
+                <b>Mask Advise:</b>
+                <span v-if="maskAdvised">High Air Pollution Expected (PM2_5 > 10). You should wear a Mask
+                    outside.</span>
+                <span v-if="!maskAdvised">There is not much air pollution these dates. No need to wear a mask!.</span>
+            </p>
+        </div>
+
         <table v-if="forecastJson">
             <thead>
                 <tr>
@@ -102,13 +112,6 @@ TODO:
             </tbody>
         </table>
     </div>
-
-
-    <!-- <button @click="increment" class="h-10 px-6 font-semibold rounded-full bg-violet-600 text-white">
-            Count is: {{ count }}
-        </button> -->
-    <!-- <MyComponent /> -->
-    </div>
 </body>
 
 </html>
@@ -126,6 +129,7 @@ TODO:
                 errorMessage: '',
                 forecastJson: null,
                 isRain: null,
+                maskAdvised: null,
                 temperatureSummary: null,
                 townSearchHistory: []
             }
@@ -148,6 +152,7 @@ TODO:
                         this.forecastJson = responseJSON.forecastSummary;
                         this.temperatureSummary = responseJSON.temperatureSummary;
                         this.isRain = responseJSON.isRain;
+                        this.maskAdvised = responseJSON.maskAdvised;
 
                         // Reset any errors
                         this.isError = false;

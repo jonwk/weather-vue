@@ -32,13 +32,12 @@ app.get('/forecast/:town', getForecast);
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
 function getMaskAdvise(forecastSummary) {
-    let pm2_5 = [];
+    var pm2_5 = [];
     for (dateEntry in forecastSummary) {
-        pm2_5.push(forecastSummary[dateEntry].averagePM2_5);
+        pm2_5.push(parseInt(forecastSummary[dateEntry].averagePM2_5));
     }
-    // console.log(pm2_5);
     const pm2_5_avg = average(pm2_5);
-    return pm2_5_avg > 10;
+    return (pm2_5_avg > 10);
 }
 
 function getTemperaturesSummary(forecastSummary) {
