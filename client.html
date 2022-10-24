@@ -107,7 +107,7 @@ TODO:
             </p>
         </div>
 
-        <table v-if="weatherJSON" class="w-full text-sm text-left text-gray-500 ">
+        <table v-if="!isError && weatherJSON" class="w-full text-sm text-left text-gray-500 ">
             <thead class="text-xs text-gray-700 uppercase bg-gray-5">
                 <tr>
                     <th scope="col" class="border border-slate-300">Date</th>

@@ -41,7 +41,7 @@ function getMaskAdvise(forecastData) {
         else
             pm2_5.push(parseInt(forecastData[forecastDate].avgPM2_5));
     }
-    console.log(pm2_5)
+    // console.log(pm2_5)
     const pm2_5_avg = average(pm2_5);
     return (pm2_5_avg > 10);
 }
