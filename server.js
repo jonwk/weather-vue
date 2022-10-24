@@ -36,7 +36,7 @@ app.listen(port, () => console.log(`Weather app listening on port ${port}!`));
 function getMaskAdvise(forecastData) {
     var pm2_5 = [];
     for (forecastDate in forecastData) {
-        if (forecastData[forecastDate].avgPM2_5 === null ||forecastData[forecastDate].avgPM2_5 === undefined)
+        if (forecastData[forecastDate].avgPM2_5 === null || forecastData[forecastDate].avgPM2_5 === undefined)
             pm2_5.push(parseInt(0));
         else
             pm2_5.push(parseInt(forecastData[forecastDate].avgPM2_5));
@@ -93,14 +93,18 @@ function getForecast(req, res) {
 
             var weatherData = response.data.list;
             // Iterating over each day forecast
+
+            var days = 0
             for (weatherEntry in weatherData) {
                 // formatting date
                 let date = new Date(response.data.list[weatherEntry].dt * 1000);
                 date.setHours(0, 0, 0, 0);
                 date = date.toLocaleDateString();
-
+                // Making sure we only have next four days forercast
+                if (days > 4) break;
                 // Initiliazing if undefined or null
                 if (!forecastData[date]) {
+                    days++;
                     forecastData[date] = {
                         windSpeeds: [],
                         temperatures: [],
@@ -123,13 +127,16 @@ function getForecast(req, res) {
     ).then(() => {
         axios.get(`${base_url}/air_pollution/forecast?lat=${townLat}&lon=${townLon}&APPID=${API_key}`).then((response1) => {
             const airPollutionData = response1.data.list;
+            var days = 0
             for (airPollutionEntry of airPollutionData) {
                 let date = new Date(airPollutionEntry.dt * 1000);
                 date.setHours(0, 0, 0, 0);
                 date = date.toLocaleDateString();
-
+                // Making sure we only have next four days forercast
+                if (days > 4) break;
                 // Initiliazing if undefined or null
                 if (!airPollutionData[date]) {
+                    days++;
                     airPollutionData[date] = {
                         pm2_5: []
                     }
@@ -139,8 +146,11 @@ function getForecast(req, res) {
                 // console.log(`${date} - PM2_5 - ${airPollutionEntry.components.pm2_5}`)
             }
 
+
             //  Calculating averages once compiled
+
             for (forecastDate in forecastData) {
+
                 // console.log(airPollutionData[forecastDate].pm2_5)
                 forecastData[forecastDate].avgTemp = kelvin_to_celsius(average(forecastData[forecastDate].temperatures));
                 forecastData[forecastDate].temperatureRange = min_max(forecastData[forecastDate].temperatures);
