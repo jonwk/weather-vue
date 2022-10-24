@@ -36,8 +36,12 @@ app.listen(port, () => console.log(`Weather app listening on port ${port}!`));
 function getMaskAdvise(forecastData) {
     var pm2_5 = [];
     for (forecastDate in forecastData) {
-        pm2_5.push(parseInt(forecastData[forecastDate].avgPM2_5));
+        if (forecastData[forecastDate].avgPM2_5 === null ||forecastData[forecastDate].avgPM2_5 === undefined)
+            pm2_5.push(parseInt(0));
+        else
+            pm2_5.push(parseInt(forecastData[forecastDate].avgPM2_5));
     }
+    console.log(pm2_5)
     const pm2_5_avg = average(pm2_5);
     return (pm2_5_avg > 10);
 }
@@ -59,7 +63,7 @@ function getTemperatureAnalysis(forecastData) {
     }
 
     if (max > 24) weatherType = "hot";
-    else if ( min >= 12 && max <= 24 ) weatherType = "mild";
+    else if (min >= 12 && max <= 24) weatherType = "mild";
     else weatherType = "cold";
 
     return {
@@ -130,17 +134,20 @@ function getForecast(req, res) {
                         pm2_5: []
                     }
                 }
-                airPollutionData[date].pm2_5.push(airPollutionEntry.components.pm2_5);
+                // console.log(airPollutionEntry.components.pm2_5)
+                airPollutionData[date].pm2_5.push(parseInt(airPollutionEntry.components.pm2_5))
                 // console.log(`${date} - PM2_5 - ${airPollutionEntry.components.pm2_5}`)
             }
 
             //  Calculating averages once compiled
             for (forecastDate in forecastData) {
+                // console.log(airPollutionData[forecastDate].pm2_5)
                 forecastData[forecastDate].avgTemp = kelvin_to_celsius(average(forecastData[forecastDate].temperatures));
                 forecastData[forecastDate].temperatureRange = min_max(forecastData[forecastDate].temperatures);
                 forecastData[forecastDate].avgWind = average(forecastData[forecastDate].windSpeeds);
                 forecastData[forecastDate].rainfallLevels = sum(forecastData[forecastDate].rainfallLevels);
-                forecastData[forecastDate].avgPM2_5 = average(airPollutionData[forecastDate].pm2_5);
+                if (airPollutionData[forecastDate] !== null && airPollutionData[forecastDate] !== undefined)
+                    forecastData[forecastDate].avgPM2_5 = average(airPollutionData[forecastDate].pm2_5);
             }
 
             // Get overall temperature weatherType and air pollution analysis
