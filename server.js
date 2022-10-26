@@ -3,6 +3,8 @@ require("dotenv").config()
 const axios = require('axios')
 const cors = require('cors');
 const express = require('express');
+const router = express.Router();
+const path = require('path');
 const { get } = require("http");
 
 // Setting up Express App
@@ -27,7 +29,11 @@ const min_max = (arr) => {
     return { min: min, max: max }
 }
 
+router.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname + '/index.html'));
+})
 
+app.use('/', router);
 app.get('/api', (req, res) => res.send('Weather App Server Side'));
 
 app.get('/api/weather/:town', getForecast);
