@@ -1,6 +1,5 @@
 // console.log('Vue App Backend')
 require("dotenv").config()
-
 const axios = require('axios')
 const cors = require('cors');
 const express = require('express');
@@ -14,6 +13,9 @@ const port = 3000
 // API Key from .env file and the base url
 const base_url = `https://api.openweathermap.org/data/2.5`
 const API_key = process.env.API_key
+
+console.log(`server.js started`);
+console.log(`api key is ${API_key}`);
 
 // Some helper functions
 const average = arr => (arr.reduce((p, c) => p + c, 0) / arr.length).toFixed(2);
