@@ -51,7 +51,7 @@ TODO:
                             clip-rule="evenodd"></path>
                     </svg>
                 </div>
-                <input v-model="town" type="text" v-model="town"
+                <input v-model="town" type="text" v-model="town" @keyup.enter="getWeatherForecast"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 "
                     placeholder="Enter a town name..." required />
             </div>
@@ -185,4 +185,18 @@ TODO:
             }
         }
     }).mount('#app')
+</script>
+
+<script>
+    var textBox = document.getElementById("textbox");
+
+    textBox.addEventListener("keyup", function (event) {
+
+        // Checking if key pressed is ENTER or not
+        // if the key pressed is ENTER
+        // click listener on button is called
+        if (event.keyCode == 13) {
+            button.click();
+        }
+    });
 </script>
