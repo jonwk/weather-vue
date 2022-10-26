@@ -195,3 +195,5 @@ function getForecast(req, res) {
 
 }
 
+// Export the Express API
+module.exports = app;
