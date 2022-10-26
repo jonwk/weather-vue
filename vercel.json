@@ -8,10 +8,6 @@
     ],
     "redirects": [
         {
-            "source": "/",
-            "destination": "client.html"
-        },
-        {
             "source": "/api/(.*)",
             "destination": "server.js"
         }
