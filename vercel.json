@@ -6,13 +6,11 @@
             "use": "@now/node"
         }
     ],
-    "redirects": [
-        {
-            "source": "/",
-            "destination": "client.html"
-        }
-    ],
     "routes": [
+        {
+            "src": "/",
+            "dest": "/client.html"
+        },
         {
             "src": "/api/(.*)",
             "dest": "server.js"
