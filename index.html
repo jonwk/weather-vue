@@ -159,7 +159,7 @@ TODO:
             getWeatherForecast() {
                 console.log(`Requesting weather forecast for ${this.town}...`);
 
-                fetch(`http://localhost:3000/weather/${this.town}`)
+                fetch(`https://weather-vue-app.vercel.app/api/weather/${this.town}`)
                     .then((response) => {
                         // if the response is ok
                         if (response.status === 200) return response.json();

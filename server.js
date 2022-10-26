@@ -28,9 +28,9 @@ const min_max = (arr) => {
 }
 
 
-app.get('/', (req, res) => res.send('Weather App Server Side'));
+app.get('/api', (req, res) => res.send('Weather App Server Side'));
 
-app.get('/weather/:town', getForecast);
+app.get('/api/weather/:town', getForecast);
 
 app.listen(port, () => console.log(`Weather app listening on port ${port}!`));
 
